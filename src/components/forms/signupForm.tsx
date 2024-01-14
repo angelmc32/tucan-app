@@ -51,7 +51,6 @@ export default function SignupForm() {
       hasHackathonExperience: "false",
       ethereumExperience: "beginner",
       isScholarshipApplicant: "false",
-      areTermsAccepted: false,
       isVipApplicant: "",
     },
   });
@@ -117,7 +116,6 @@ export default function SignupForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="text-left">
         <Tabs
           defaultValue="1"
-          className="md:w-96"
           // onValueChange={(value) => setStep(value)}
           value={step.toString()}
         >
@@ -194,7 +192,7 @@ export default function SignupForm() {
                     <Input placeholder="jared@piedpiper.com" {...field} />
                   </FormControl>
                   <FormDescription>
-                    te recomendamos usar un correo que sí uses
+                    te recomendamos registar un correo que sí revises
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -208,19 +206,23 @@ export default function SignupForm() {
                 return (
                   <FormItem className="flex flex-col">
                     <FormLabel htmlFor="isStudent">¿eres estudiante?</FormLabel>
-                    <FormControl>
+                    <FormDescription>
+                      medio-tiempo o tiempo completo (en una institución
+                      educativa)
+                    </FormDescription>
+                    <FormControl className="py-1">
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value ?? "false"}
-                        className="space-y-0 pl-4"
+                        className="space-y-1 pl-2 md:pl-4"
                       >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
                             <RadioGroupItem value="true" id="true" />
                           </FormControl>
                           <FormLabel className="font-normal">sí</FormLabel>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
                             <RadioGroupItem value="false" id="false" />
                           </FormControl>
@@ -294,7 +296,7 @@ export default function SignupForm() {
               )}
             />
           </TabsContent>
-          <TabsContent value="2" className="space-y-4 py-4">
+          <TabsContent value="2" className="my-0 space-y-2 px-4 py-6 md:py-4">
             <FormField
               name="website"
               control={form.control}
@@ -304,14 +306,11 @@ export default function SignupForm() {
                     muéstranos algo que hayas hecho que te enorgullezca
                   </FormLabel>
                   <FormDescription>
-                    puede ser tu portafolio, una página web o tu blog...
-                    ¡presúmenos qué has construido!
+                    puede ser tu portafolio, sitio web o tu blog/perfil...
+                    ¡presúmenos tus habilidades!
                   </FormDescription>
                   <FormControl>
-                    <Input
-                      placeholder="https://github.com/piedpiper"
-                      {...field}
-                    />
+                    <Input placeholder="https://tusitio.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -372,7 +371,7 @@ export default function SignupForm() {
               )}
             />
           </TabsContent>
-          <TabsContent value="3" className="space-y-4 py-4">
+          <TabsContent value="3" className="my-0 space-y-2 px-4 py-6 md:py-4">
             <FormField
               name="primaryRole"
               control={form.control}
@@ -381,16 +380,16 @@ export default function SignupForm() {
                   <FormLabel htmlFor="primaryRole">
                     ¿cuál es tu "super poder"?
                   </FormLabel>
-                  <FormDescription className="!mb-3">
+                  <FormDescription>
                     escoge el rol en el que mejor te desempeñes
                   </FormDescription>
-                  <FormControl>
+                  <FormControl className="py-1">
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value}
-                      className="space-y-1 pl-4"
+                      className="space-y-1 pl-2 md:pl-4"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem
                             value="administrative"
@@ -404,7 +403,7 @@ export default function SignupForm() {
                           administrativo / legal
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="business" id="business" />
                         </FormControl>
@@ -412,7 +411,7 @@ export default function SignupForm() {
                           negocio / biz dev
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="dev" id="dev" />
                         </FormControl>
@@ -420,7 +419,7 @@ export default function SignupForm() {
                           desarrollador / técnico / código
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="creative" id="creative" />
                         </FormControl>
@@ -428,7 +427,7 @@ export default function SignupForm() {
                           diseño / arte / visuales
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem
                             value="operationsPmo"
@@ -442,7 +441,7 @@ export default function SignupForm() {
                           administración de proyectos / operaciones
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem
                             value="marketingProduct"
@@ -456,7 +455,7 @@ export default function SignupForm() {
                           producto / marketing
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="researcher" id="researcher" />
                         </FormControl>
@@ -464,7 +463,7 @@ export default function SignupForm() {
                           investigador / entusiasta
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="trainee" id="trainee" />
                         </FormControl>
@@ -506,29 +505,29 @@ export default function SignupForm() {
               control={form.control}
               render={({ field }) => {
                 return (
-                  <FormItem className="flex flex-col">
+                  <FormItem className="space-y-0">
                     <FormLabel htmlFor="isBuilding">
                       ¿tienes algún proyecto?
                     </FormLabel>
-                    <FormControl>
+                    <FormControl className="py-1">
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value ?? "false"}
-                        className="space-y-0 pl-4"
+                        className="space-y-1 pl-2 md:pl-4"
                       >
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
                             <RadioGroupItem value="true" id="true" />
                           </FormControl>
-                          <FormLabel className="font-normal">
+                          <FormLabel className="font-normal" htmlFor="true">
                             sí, estoy construyendo algo
                           </FormLabel>
                         </FormItem>
-                        <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
                             <RadioGroupItem value="false" id="false" />
                           </FormControl>
-                          <FormLabel className="font-normal">
+                          <FormLabel className="font-normal" htmlFor="false">
                             no, todavía no me animo
                           </FormLabel>
                         </FormItem>
@@ -539,7 +538,7 @@ export default function SignupForm() {
               }}
             />
           </TabsContent>
-          <TabsContent value="4" className="space-y-4 py-4">
+          <TabsContent value="4" className="my-0 space-y-2 px-4 py-6 md:py-4">
             <FormField
               name="background"
               control={form.control}
@@ -555,6 +554,7 @@ export default function SignupForm() {
                   <FormControl>
                     <Textarea
                       placeholder="cree un sistema de préstamos en mi trabajo, construí un sito web para un negocio, organicé un evento comunitario para 40 personas, etc..."
+                      rows={4}
                       {...field}
                     />
                   </FormControl>
@@ -575,8 +575,9 @@ export default function SignupForm() {
                     ¿cuál es tu idea o problema que quieres resolver?
                   </FormDescription>
                   <FormControl>
-                    <Input
+                    <Textarea
                       placeholder="un sistema de efectivo electrónico usuario-a-usuario"
+                      rows={4}
                       {...field}
                     />
                   </FormControl>
@@ -599,8 +600,8 @@ export default function SignupForm() {
                   </FormDescription>
                   <FormControl>
                     <Textarea
-                      rows={3}
-                      placeholder="un internet descentralizado que utiliza un algoritmo de compresión para mejorar la transferencia de datos"
+                      rows={4}
+                      placeholder="pagos en línea enviados de una persona a otra, a través de una red descentralizada de computadoras que comparten la misma información, protegida con criptografía"
                       {...field}
                     />
                   </FormControl>
@@ -649,23 +650,27 @@ export default function SignupForm() {
                       aquí
                     </Link>
                   </FormDescription>
-                  <FormControl>
+                  <FormControl className="py-1">
                     <RadioGroup
                       onValueChange={field.onChange}
                       defaultValue={field.value ?? "false"}
-                      className="space-y-1 pl-4"
+                      className="space-y-1 pl-2 md:pl-4"
                     >
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="true" id="true" />
                         </FormControl>
-                        <FormLabel className="font-normal">sí</FormLabel>
+                        <FormLabel className="font-normal" htmlFor="true">
+                          sí
+                        </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
+                      <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="false" id="false" />
                         </FormControl>
-                        <FormLabel className="font-normal">no</FormLabel>
+                        <FormLabel className="font-normal" htmlFor="false">
+                          no
+                        </FormLabel>
                       </FormItem>
                     </RadioGroup>
                   </FormControl>
@@ -674,8 +679,51 @@ export default function SignupForm() {
               )}
             />
           </TabsContent>
-          {/* <TabsContent value="6" className="space-y-4 py-4">
+          <TabsContent value="5" className="my-0 space-y-2 px-4 py-6 md:py-4">
+            <h4
+              className={`${museoModernoFont.className} text-center text-xl font-medium text-primary`}
+            >
+              enviar
+            </h4>
             <FormField
+              name="areTermsAccepted"
+              control={form.control}
+              render={({ field }) => {
+                return (
+                  <FormItem className="flex flex-col">
+                    <FormLabel htmlFor="areTermsAccepted">
+                      ¿aceptas los términos y condiciones de la plataforma?
+                    </FormLabel>
+                    <FormControl>
+                      <div className="flex items-center space-x-2">
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={() => {
+                            return field.onChange(!field.value);
+                          }}
+                        />
+                        <FormLabel className="text-sm font-normal">
+                          sí, acepto los términos y condiciones
+                        </FormLabel>
+                      </div>
+                    </FormControl>
+                  </FormItem>
+                );
+              }}
+            />
+            <div className="flex w-full justify-center">
+              <Button type="submit">registrarme</Button>
+            </div>
+          </TabsContent>
+          {/* 
+          // TODO: move project form to its own page
+          hidden tab, for project info
+          */}
+          <TabsContent
+            value="6"
+            className="my-0 hidden space-y-2 px-4 py-6 md:py-4"
+          >
+            {/* <FormField
               name="projectName"
               control={form.control}
               render={({ field }) => (
@@ -776,43 +824,7 @@ export default function SignupForm() {
                   <FormMessage />
                 </FormItem>
               )}
-            />
-          </TabsContent> */}
-          <TabsContent value="5" className="space-y-4 py-4">
-            <h4
-              className={`${museoModernoFont.className} text-center text-xl font-medium text-primary`}
-            >
-              enviar
-            </h4>
-            <FormField
-              name="areTermsAccepted"
-              control={form.control}
-              render={({ field }) => {
-                return (
-                  <FormItem className="flex flex-col">
-                    <FormLabel htmlFor="areTermsAccepted">
-                      ¿aceptas los términos y condiciones de la plataforma?
-                    </FormLabel>
-                    <FormControl>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          checked={field.value}
-                          onCheckedChange={() => {
-                            return field.onChange(!field.value);
-                          }}
-                        />
-                        <FormLabel className="text-sm font-normal">
-                          sí, acepto los términos y condiciones
-                        </FormLabel>
-                      </div>
-                    </FormControl>
-                  </FormItem>
-                );
-              }}
-            />
-            <div className="flex w-full justify-center">
-              <Button type="submit">registrarme</Button>
-            </div>
+            /> */}
           </TabsContent>
         </Tabs>
       </form>
