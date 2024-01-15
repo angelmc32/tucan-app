@@ -4,19 +4,14 @@ import { useState } from "react";
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
 import Link from "next/link";
 
-import { signupFormSchema as formSchema } from "@/lib/form-schemas/signupForm";
-import { museoModernoFont } from "@/lib/fonts";
+import { api } from "@/trpc/react";
+import { bootcampSignupFormSchema as formSchema } from "@/lib/form-schemas/signupForm";
 import { cn } from "@/lib/utils";
 
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
+import { Command, CommandGroup, CommandItem } from "@/components/ui/command";
 import {
   Form,
   FormControl,
@@ -37,6 +32,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 import { ChevronLeft, ChevronRight, ChevronsUpDown, Check } from "lucide-react";
 
 // options for "ethereumExperience" combobox field
@@ -60,21 +56,34 @@ export default function SignupForm() {
       primaryRole: "trainee",
       professionalProfile: "",
       website: "",
-      isStudent: "isStudenDefault",
+      isStudent: undefined,
       githubUsername: "",
       xUsername: "",
       telegramUsername: "",
-      isBuilding: "isBuildingDefault",
+      isBuilding: undefined,
       background: "",
       ideaPitch: "",
       motivation: "",
-      hasTeam: "hasTeamDefault",
-      hasHackathonExperience: "hasHackathonExperienceDefault",
+      hasTeam: undefined,
+      hasHackathonExperience: undefined,
       ethereumExperience: "beginner",
-      isScholarshipApplicant: "isScholarshipApplicantDefault",
+      isScholarshipApplicant: undefined,
       isVipApplicant: "",
     },
   });
+
+  const { mutate: createBootcampSignup } =
+    api.signup.createBootcampSignup.useMutation({
+      async onSuccess() {
+        toast("tu solicitud ha sido registrada exitosamente");
+        setStep("6");
+      },
+      onError(err) {
+        toast(
+          typeof err === "string" ? err : "ocurrió un error, intenta de nuevo",
+        );
+      },
+    });
 
   async function checkRequiredFields() {
     switch (step) {
@@ -125,12 +134,11 @@ export default function SignupForm() {
       return;
     }
   }
-  console.log(form.formState);
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("submitting!!!");
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
     console.log(values);
+    createBootcampSignup(values);
   }
   return (
     <Form {...form}>
@@ -140,7 +148,12 @@ export default function SignupForm() {
           // onValueChange={(value) => setStep(value)}
           value={step.toString()}
         >
-          <TabsList className="w-full justify-around space-x-3 px-0">
+          <TabsList
+            className={cn(
+              "w-full justify-around space-x-3 px-0",
+              step === "6" && "hidden",
+            )}
+          >
             <Button
               size="icon"
               variant="outline"
@@ -232,7 +245,7 @@ export default function SignupForm() {
                     <FormControl className="py-1">
                       <RadioGroup
                         onValueChange={field.onChange}
-                        defaultValue={field.value ?? "false"}
+                        defaultValue="isStudentDefault"
                         className="space-y-1 pl-2 md:pl-4"
                       >
                         <FormItem className="hidden items-center space-x-2 space-y-0">
@@ -558,7 +571,7 @@ export default function SignupForm() {
                     <FormControl className="py-1">
                       <RadioGroup
                         onValueChange={field.onChange}
-                        defaultValue={field.value ?? "false"}
+                        defaultValue="isBuildingDefault"
                         className="space-y-1 pl-2 md:pl-4"
                       >
                         <FormItem className="hidden items-center space-x-2 space-y-0">
@@ -667,7 +680,7 @@ export default function SignupForm() {
                   <FormControl className="py-1">
                     <RadioGroup
                       onValueChange={field.onChange}
-                      defaultValue={field.value ?? "false"}
+                      defaultValue="hasTeamDefault"
                       className="space-y-1 pl-2 md:pl-4"
                     >
                       <FormItem className="hidden items-center space-x-2 space-y-0">
@@ -730,7 +743,7 @@ export default function SignupForm() {
                   <FormControl className="py-1">
                     <RadioGroup
                       onValueChange={field.onChange}
-                      defaultValue={field.value ?? "false"}
+                      defaultValue="hasHackathonExperienceDefault"
                       className="space-y-1 pl-2 md:pl-4"
                     >
                       <FormItem className="hidden items-center space-x-2 space-y-0">
@@ -902,7 +915,7 @@ export default function SignupForm() {
                   <FormControl className="py-1">
                     <RadioGroup
                       onValueChange={field.onChange}
-                      defaultValue={field.value ?? "false"}
+                      defaultValue="isScholarshipApplicantDefault"
                       className="space-y-1 pl-2 md:pl-4"
                     >
                       <FormItem className="hidden items-center space-x-2 space-y-0">
@@ -954,12 +967,12 @@ export default function SignupForm() {
               )}
             />
             <FormField
-              name="areTermsAccepted"
+              name="hasAcceptedTerms"
               control={form.control}
               render={({ field }) => {
                 return (
                   <FormItem className="flex flex-col items-center py-3 text-center md:py-2">
-                    <FormLabel htmlFor="areTermsAccepted">
+                    <FormLabel htmlFor="hasAcceptedTerms">
                       ¿aceptas los términos y condiciones de la plataforma?
                     </FormLabel>
                     <FormControl>
@@ -991,8 +1004,37 @@ export default function SignupForm() {
           */}
           <TabsContent
             value="6"
-            className="my-0 hidden space-y-2 px-4 py-6 md:py-4"
+            className="my-0 flex flex-col space-y-2 px-4 py-6 text-center md:py-4"
           >
+            <h4 className="text-xl">gracias por registrarte</h4>
+            <p>
+              evaluaremos tu información, y recibirás un correo con el estatus
+              de tu solicitud
+            </p>
+            <p>síguenos en nuestras redes sociales para noticias oficiales</p>
+            <Link
+              href="https://twitter.com/fruteroclub"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary"
+            >
+              X / Twitter
+            </Link>
+            <div className="flex justify-center">
+              <div className="unset-img max-w-48 p-4">
+                <Image
+                  layout="fill"
+                  className="custom-img"
+                  src="/images/banana.jpg"
+                  alt="Banana character with cool sunglasses"
+                />
+              </div>
+            </div>
+            <div className="flex w-full justify-center">
+              <Link href="/">
+                <Button size="lg">ir a inicio</Button>
+              </Link>
+            </div>
             {/* <FormField
               name="projectName"
               control={form.control}

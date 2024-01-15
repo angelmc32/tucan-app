@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-export const signupFormSchema = z.object({
+export const bootcampSignupFormSchema = z.object({
   displayName: z.string().min(3, {
     message: "tu nombre debe de tener al menos 3 caracteres",
   }),
@@ -14,27 +14,18 @@ export const signupFormSchema = z.object({
         message: "debes escoger alguna de las opciones",
       },
     ),
-  // .transform((value) => value === "true"),
-  favoriteFruit: z
-    .string()
-    .min(3, {
-      message: "debes introducir cuál es tu fruta favorita",
-    })
-    .optional(),
-  cityRegion: z
-    .string()
-    .min(2, {
-      message: "debes introducir la ciudad/región donde pasas más tiempo",
-    })
-    .optional(),
-  country: z
-    .string()
-    .min(3, {
-      message: "debes introducir el país donde pasas más tiempo",
-    })
-    .optional(),
+  // .transform((value: string) => value === "isStudentTrue"),
+  cityRegion: z.string().min(2, {
+    message: "debes introducir la ciudad/región donde pasas más tiempo",
+  }),
+  country: z.string().min(3, {
+    message: "debes introducir el país donde pasas más tiempo",
+  }),
   website: z.string().url({
     message: "debes introducir una liga válida e.g. https://tusitio.com",
+  }),
+  favoriteFruit: z.string().min(3, {
+    message: "debes introducir cuál es tu fruta favorita",
   }),
   githubUsername: z.string().optional(),
   xUsername: z.string().optional(),
@@ -54,12 +45,9 @@ export const signupFormSchema = z.object({
       required_error: "debes introducir cuál es tu superpoder (rol principal)",
     },
   ),
-  professionalProfile: z
-    .string()
-    .min(2, {
-      message: "debes introducir cuál tu perfil profesional",
-    })
-    .optional(),
+  professionalProfile: z.string().min(2, {
+    message: "debes introducir cuál tu perfil profesional",
+  }),
   isBuilding: z
     .string()
     .refine(
@@ -69,10 +57,7 @@ export const signupFormSchema = z.object({
         message: "debes escoger alguna de las opciones",
       },
     ),
-  // .transform((value) => value === "true"),
-  background: z.string().min(40, {
-    message: "debes introducir al menos 40 caracteres",
-  }),
+  // .transform((value: string) => value === "isBuildingTrue"),
   ideaPitch: z
     .string()
     .min(40, {
@@ -92,7 +77,7 @@ export const signupFormSchema = z.object({
         message: "debes escoger alguna de las opciones",
       },
     ),
-  // .transform((value) => value === "true"),
+  // .transform((value: string) => value === "hasTeamTrue"),
   hasHackathonExperience: z
     .string()
     .refine(
@@ -103,7 +88,10 @@ export const signupFormSchema = z.object({
         message: "debes escoger alguna de las opciones",
       },
     ),
-  // .transform((value) => value === "true"),
+  // .transform((value: string) => value === "hasHackathonExperienceTrue"),
+  background: z.string().min(40, {
+    message: "debes introducir al menos 40 caracteres",
+  }),
   ethereumExperience: z
     .enum(["beginner", "intermediate", "expert"])
     .default("beginner"),
@@ -117,13 +105,13 @@ export const signupFormSchema = z.object({
         message: "debes escoger alguna de las opciones",
       },
     ),
-  // .transform((value) => value === "true"),
-  areTermsAccepted: z.literal(true),
+  // .transform((value: string) => value === "isScholarshipApplicantTrue"),
+  hasAcceptedTerms: z.literal(true),
   // .string().refine((value: string) => value === "true" || value === "false", {
   //   message: "debes escoger alguna de las opciones",
   // }),
   // .transform((value) => value === "true"),
-  isVipApplicant: z.string().optional(),
+  isVipApplicant: z.string().optional(), // bot detection
 });
 
 export const projectCreationSchema = z.object({
