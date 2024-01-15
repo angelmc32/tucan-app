@@ -83,12 +83,11 @@ export default function SignupForm() {
           "displayName",
           "email",
           "isStudent",
-          "favoriteFruit",
           "country",
           "cityRegion",
         ]);
       case "2":
-        return await form.trigger(["website"]);
+        return await form.trigger(["website", "favoriteFruit"]);
       case "3":
         return await form.trigger([
           "primaryRole",
@@ -201,7 +200,6 @@ export default function SignupForm() {
                 </FormItem>
               )}
             />
-
             <FormField
               name="email"
               control={form.control}
@@ -220,7 +218,6 @@ export default function SignupForm() {
                 </FormItem>
               )}
             />
-
             <FormField
               name="isStudent"
               control={form.control}
@@ -286,30 +283,6 @@ export default function SignupForm() {
                 );
               }}
             />
-
-            <FormField
-              name="favoriteFruit"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="favoriteFruit">
-                    ¿con cuál fruta te identificas?
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="e.g. plátano, mango, fresa, pera, etc..."
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    fruta favorita, la de tu ex, la que desayunaste, pon la que
-                    quieras, pero pon una
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               name="country"
               control={form.control}
@@ -328,7 +301,6 @@ export default function SignupForm() {
                 </FormItem>
               )}
             />
-
             <FormField
               name="cityRegion"
               control={form.control}
@@ -364,6 +336,28 @@ export default function SignupForm() {
                   <FormControl>
                     <Input placeholder="https://tusitio.com" {...field} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              name="favoriteFruit"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="favoriteFruit">
+                    ¿con cuál fruta te identificas?
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g. plátano, mango, fresa, pera, etc..."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormDescription>
+                    fruta favorita, la de tu ex, la que desayunaste, pon la que
+                    quieras, pero pon una
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -795,7 +789,7 @@ export default function SignupForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="background">
-                    cuéntanos un poco sobre tu trabajo o experiencia
+                    cuéntanos un poco sobre tus creaciones o tu experiencia
                     construyendo
                   </FormLabel>
                   <FormDescription>
@@ -964,19 +958,19 @@ export default function SignupForm() {
               control={form.control}
               render={({ field }) => {
                 return (
-                  <FormItem className="flex flex-col">
+                  <FormItem className="flex flex-col items-center py-3 text-center md:py-2">
                     <FormLabel htmlFor="areTermsAccepted">
                       ¿aceptas los términos y condiciones de la plataforma?
                     </FormLabel>
                     <FormControl>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-center space-x-2 py-0">
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={() => {
                             return field.onChange(!field.value);
                           }}
                         />
-                        <FormLabel className="text-sm font-normal">
+                        <FormLabel className="text-base font-normal lg:text-sm">
                           sí, acepto los términos y condiciones
                         </FormLabel>
                       </div>
@@ -985,7 +979,7 @@ export default function SignupForm() {
                 );
               }}
             />
-            <div className="flex w-full justify-center py-6">
+            <div className="flex w-full justify-center py-6 md:py-4 lg:py-2">
               <Button size="lg" className="text-base" type="submit">
                 registrarme
               </Button>
