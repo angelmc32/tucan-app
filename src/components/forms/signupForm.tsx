@@ -1,14 +1,22 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import type * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 
 import { signupFormSchema as formSchema } from "@/lib/form-schemas/signupForm";
 import { museoModernoFont } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
 
-import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
 import {
   Form,
   FormControl,
@@ -18,16 +26,29 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import Link from "next/link";
+import { ChevronLeft, ChevronRight, ChevronsUpDown, Check } from "lucide-react";
+
+// options for "ethereumExperience" combobox field
+const ethExpOpts = [
+  { label: "principiante", value: "beginner" },
+  { label: "intermedio", value: "intermediate" },
+  { label: "avanzado", value: "expert" },
+] as const;
 
 export default function SignupForm() {
   const [step, setStep] = useState("1");
+  const [isEthExpOptsOpen, setIsEthExpOptsOpen] = useState(false);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,18 +60,18 @@ export default function SignupForm() {
       primaryRole: "trainee",
       professionalProfile: "",
       website: "",
-      isStudent: "false",
+      isStudent: "isStudenDefault",
       githubUsername: "",
       xUsername: "",
       telegramUsername: "",
-      isBuilding: "false",
+      isBuilding: "isBuildingDefault",
       background: "",
       ideaPitch: "",
       motivation: "",
-      hasTeam: "false",
-      hasHackathonExperience: "false",
+      hasTeam: "hasTeamDefault",
+      hasHackathonExperience: "hasHackathonExperienceDefault",
       ethereumExperience: "beginner",
-      isScholarshipApplicant: "false",
+      isScholarshipApplicant: "isScholarshipApplicantDefault",
       isVipApplicant: "",
     },
   });
@@ -61,6 +82,7 @@ export default function SignupForm() {
         return await form.trigger([
           "displayName",
           "email",
+          "isStudent",
           "favoriteFruit",
           "country",
           "cityRegion",
@@ -75,13 +97,13 @@ export default function SignupForm() {
         ]);
       case "4":
         return await form.trigger([
-          "background",
           "ideaPitch",
           "motivation",
-          "hasTeam",
           "hasHackathonExperience",
-          "ethereumExperience",
-          "isScholarshipApplicant",
+          "hasTeam",
+          // "background",
+          // "ethereumExperience",
+          // "isScholarshipApplicant",
         ]);
       // return displayName && email && favoriteFruit && country && cityRegion
       //   ? true
@@ -104,7 +126,7 @@ export default function SignupForm() {
       return;
     }
   }
-
+  console.log(form.formState);
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log("submitting!!!");
     // Do something with the form values.
@@ -216,17 +238,47 @@ export default function SignupForm() {
                         defaultValue={field.value ?? "false"}
                         className="space-y-1 pl-2 md:pl-4"
                       >
-                        <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormItem className="hidden items-center space-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="true" id="true" />
+                            <RadioGroupItem
+                              value="isStudentDefault"
+                              id="isStudentDefault"
+                            />
                           </FormControl>
-                          <FormLabel className="font-normal">sí</FormLabel>
+                          <FormLabel
+                            className="font-normal"
+                            htmlFor="isStudentDefault"
+                          >
+                            no aplica
+                          </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="false" id="false" />
+                            <RadioGroupItem
+                              value="isStudentTrue"
+                              id="isStudentTrue"
+                            />
                           </FormControl>
-                          <FormLabel className="font-normal">no</FormLabel>
+                          <FormLabel
+                            className="font-normal"
+                            htmlFor="isStudentTrue"
+                          >
+                            sí
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem
+                              value="isStudentFalse"
+                              id="isStudentFalse"
+                            />
+                          </FormControl>
+                          <FormLabel
+                            className="font-normal"
+                            htmlFor="isStudentFalse"
+                          >
+                            no
+                          </FormLabel>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -278,8 +330,8 @@ export default function SignupForm() {
             />
 
             <FormField
-              control={form.control}
               name="cityRegion"
+              control={form.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel htmlFor="cityRegion">
@@ -515,19 +567,45 @@ export default function SignupForm() {
                         defaultValue={field.value ?? "false"}
                         className="space-y-1 pl-2 md:pl-4"
                       >
+                        <FormItem className="hidden items-center space-x-2 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem
+                              value="isBuildingDefault"
+                              id="isBuildingDefault"
+                            />
+                          </FormControl>
+                          <FormLabel
+                            className="font-normal"
+                            htmlFor="isBuildingDefault"
+                          >
+                            no aplica
+                          </FormLabel>
+                        </FormItem>
                         <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="true" id="true" />
+                            <RadioGroupItem
+                              value="isBuildingTrue"
+                              id="isBuildingTrue"
+                            />
                           </FormControl>
-                          <FormLabel className="font-normal" htmlFor="true">
+                          <FormLabel
+                            className="font-normal"
+                            htmlFor="isBuildingTrue"
+                          >
                             sí, estoy construyendo algo
                           </FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-2 space-y-0">
                           <FormControl>
-                            <RadioGroupItem value="false" id="false" />
+                            <RadioGroupItem
+                              value="isBuildingFalse"
+                              id="isBuildingFalse"
+                            />
                           </FormControl>
-                          <FormLabel className="font-normal" htmlFor="false">
+                          <FormLabel
+                            className="font-normal"
+                            htmlFor="isBuildingFalse"
+                          >
                             no, todavía no me animo
                           </FormLabel>
                         </FormItem>
@@ -539,30 +617,6 @@ export default function SignupForm() {
             />
           </TabsContent>
           <TabsContent value="4" className="my-0 space-y-2 px-4 py-6 md:py-4">
-            <FormField
-              name="background"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="background">
-                    cuéntanos un poco sobre tu trabajo o experiencia
-                    construyendo
-                  </FormLabel>
-                  <FormDescription>
-                    ¿qué has ayudado a construir o qué problemas has resuelto?
-                  </FormDescription>
-                  <FormControl>
-                    <Textarea
-                      placeholder="cree un sistema de préstamos en mi trabajo, construí un sito web para un negocio, organicé un evento comunitario para 40 personas, etc..."
-                      rows={4}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               name="ideaPitch"
               control={form.control}
@@ -611,19 +665,220 @@ export default function SignupForm() {
             />
 
             <FormField
+              name="hasTeam"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="hasTeam">¿tienes equipo?</FormLabel>
+                  <FormControl className="py-1">
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value ?? "false"}
+                      className="space-y-1 pl-2 md:pl-4"
+                    >
+                      <FormItem className="hidden items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem
+                            value="hasTeamDefault"
+                            id="hasTeamDefault"
+                          />
+                        </FormControl>
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="hasTeamDefault"
+                        >
+                          no aplica
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem
+                            value="hasTeamTrue"
+                            id="hasTeamTrue"
+                          />
+                        </FormControl>
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="hasTeamTrue"
+                        >
+                          sí, ya tengo al menos un compañero
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem
+                            value="hasTeamFalse"
+                            id="hasTeamFalse"
+                          />
+                        </FormControl>
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="hasTeamFalse"
+                        >
+                          no, pero estoy buscando
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              name="hasHackathonExperience"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="hasHackathonExperience">
+                    ¿has participado en un hackathon antes?
+                  </FormLabel>
+                  <FormControl className="py-1">
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value ?? "false"}
+                      className="space-y-1 pl-2 md:pl-4"
+                    >
+                      <FormItem className="hidden items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem
+                            value="hasHackathonExperienceDefault"
+                            id="hasHackathonExperienceDefault"
+                          />
+                        </FormControl>
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="hasHackathonExperienceDefault"
+                        >
+                          no aplica
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem
+                            value="hasHackathonExperienceTrue"
+                            id="hasHackathonExperienceTrue"
+                          />
+                        </FormControl>
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="hasHackathonExperienceTrue"
+                        >
+                          sí
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem
+                            value="hasHackathonExperienceFalse"
+                            id="hasHackathonExperienceFalse"
+                          />
+                        </FormControl>
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="hasHackathonExperienceFalse"
+                        >
+                          no
+                        </FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </TabsContent>
+          <TabsContent value="5" className="my-0 space-y-2 px-4 py-6 md:py-4">
+            <FormField
+              name="background"
+              control={form.control}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="background">
+                    cuéntanos un poco sobre tu trabajo o experiencia
+                    construyendo
+                  </FormLabel>
+                  <FormDescription>
+                    ¿qué has ayudado a construir o qué problemas has resuelto?
+                  </FormDescription>
+                  <FormControl>
+                    <Textarea
+                      placeholder="creé un sistema de préstamos en mi trabajo, construí un sito web para un negocio, organicé un evento comunitario para 40 personas, etc..."
+                      rows={4}
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
               name="ethereumExperience"
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="ethereumExperience">
-                    ¿cuál es tu experiencia con ethereum?
+                  <FormLabel>
+                    ¿cuál es tu nivel de experiencia con ethereum?
                   </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="principiante, intermedio, experto..."
-                      {...field}
-                    />
-                  </FormControl>
+                  <FormDescription>
+                    qué tanto has usado o construido dApps en el ecosistema
+                    ethereum
+                  </FormDescription>
+                  <Popover
+                    open={isEthExpOptsOpen}
+                    onOpenChange={setIsEthExpOptsOpen}
+                  >
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          className={cn(
+                            "w-full justify-between text-base lg:text-sm",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          {field.value
+                            ? ethExpOpts.find(
+                                (option) => option.value === field.value,
+                              )?.label
+                            : "escoge un nivel"}
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-96 p-0">
+                      <Command>
+                        <CommandGroup>
+                          {ethExpOpts.map((option) => (
+                            <CommandItem
+                              value={option.value}
+                              key={option.value}
+                              onSelect={() => {
+                                setIsEthExpOptsOpen(false);
+                                form.setValue(
+                                  "ethereumExperience",
+                                  option.value,
+                                );
+                              }}
+                              className="text-base lg:text-sm"
+                            >
+                              {option.label}
+                              <Check
+                                className={cn(
+                                  "ml-auto h-4 w-4",
+                                  option.value === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
@@ -634,7 +889,7 @@ export default function SignupForm() {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="projectNetworks">
+                  <FormLabel htmlFor="isScholarshipApplicant">
                     ¿quieres aplicar a la beca de "frutas == buidlers" de
                     frutero club?
                   </FormLabel>
@@ -656,19 +911,45 @@ export default function SignupForm() {
                       defaultValue={field.value ?? "false"}
                       className="space-y-1 pl-2 md:pl-4"
                     >
+                      <FormItem className="hidden items-center space-x-2 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem
+                            value="isScholarshipApplicantDefault"
+                            id="isScholarshipApplicantDefault"
+                          />
+                        </FormControl>
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="isScholarshipApplicantDefault"
+                        >
+                          no aplica
+                        </FormLabel>
+                      </FormItem>
                       <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="true" id="true" />
+                          <RadioGroupItem
+                            value="isScholarshipApplicantTrue"
+                            id="isScholarshipApplicantTrue"
+                          />
                         </FormControl>
-                        <FormLabel className="font-normal" htmlFor="true">
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="isScholarshipApplicantTrue"
+                        >
                           sí
                         </FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-2 space-y-0">
                         <FormControl>
-                          <RadioGroupItem value="false" id="false" />
+                          <RadioGroupItem
+                            value="isScholarshipApplicantFalse"
+                            id="isScholarshipApplicantFalse"
+                          />
                         </FormControl>
-                        <FormLabel className="font-normal" htmlFor="false">
+                        <FormLabel
+                          className="font-normal"
+                          htmlFor="isScholarshipApplicantFalse"
+                        >
                           no
                         </FormLabel>
                       </FormItem>
@@ -678,13 +959,6 @@ export default function SignupForm() {
                 </FormItem>
               )}
             />
-          </TabsContent>
-          <TabsContent value="5" className="my-0 space-y-2 px-4 py-6 md:py-4">
-            <h4
-              className={`${museoModernoFont.className} text-center text-xl font-medium text-primary`}
-            >
-              enviar
-            </h4>
             <FormField
               name="areTermsAccepted"
               control={form.control}
@@ -711,8 +985,10 @@ export default function SignupForm() {
                 );
               }}
             />
-            <div className="flex w-full justify-center">
-              <Button type="submit">registrarme</Button>
+            <div className="flex w-full justify-center py-6">
+              <Button size="lg" className="text-base" type="submit">
+                registrarme
+              </Button>
             </div>
           </TabsContent>
           {/* 

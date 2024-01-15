@@ -7,9 +7,13 @@ export const signupFormSchema = z.object({
   email: z.string().email("introduce un correo electrónico válido"),
   isStudent: z
     .string()
-    .refine((value: string) => value === "true" || value === "false", {
-      message: "debes escoger alguna de las opciones",
-    }),
+    .refine(
+      (value: string) =>
+        value === "isStudentTrue" || value === "isStudentFalse",
+      {
+        message: "debes escoger alguna de las opciones",
+      },
+    ),
   // .transform((value) => value === "true"),
   favoriteFruit: z
     .string()
@@ -32,7 +36,6 @@ export const signupFormSchema = z.object({
   website: z.string().url({
     message: "debes introducir una liga válida e.g. https://tusitio.com",
   }),
-  // .transform((value) => value === "true"),,
   githubUsername: z.string().optional(),
   xUsername: z.string().optional(),
   telegramUsername: z.string().optional(),
@@ -59,9 +62,13 @@ export const signupFormSchema = z.object({
     .optional(),
   isBuilding: z
     .string()
-    .refine((value: string) => value === "true" || value === "false", {
-      message: "debes escoger alguna de las opciones",
-    }),
+    .refine(
+      (value: string) =>
+        value === "isBuildingTrue" || value === "isBuildingFalse",
+      {
+        message: "debes escoger alguna de las opciones",
+      },
+    ),
   // .transform((value) => value === "true"),
   background: z.string().min(40, {
     message: "debes introducir al menos 40 caracteres",
@@ -79,24 +86,37 @@ export const signupFormSchema = z.object({
   }),
   hasTeam: z
     .string()
-    .refine((value: string) => value === "true" || value === "false", {
-      message: "debes escoger alguna de las opciones",
-    }),
+    .refine(
+      (value: string) => value === "hasTeamTrue" || value === "hasTeamFalse",
+      {
+        message: "debes escoger alguna de las opciones",
+      },
+    ),
   // .transform((value) => value === "true"),
   hasHackathonExperience: z
     .string()
-    .refine((value: string) => value === "true" || value === "false", {
-      message: "debes escoger alguna de las opciones",
-    }),
+    .refine(
+      (value: string) =>
+        value === "hasHackathonExperienceTrue" ||
+        value === "hasHackathonExperienceFalse",
+      {
+        message: "debes escoger alguna de las opciones",
+      },
+    ),
   // .transform((value) => value === "true"),
   ethereumExperience: z
     .enum(["beginner", "intermediate", "expert"])
     .default("beginner"),
   isScholarshipApplicant: z
     .string()
-    .refine((value: string) => value === "true" || value === "false", {
-      message: "debes escoger alguna de las opciones",
-    }),
+    .refine(
+      (value: string) =>
+        value === "isScholarshipApplicantTrue" ||
+        value === "isScholarshipApplicantFalse",
+      {
+        message: "debes escoger alguna de las opciones",
+      },
+    ),
   // .transform((value) => value === "true"),
   areTermsAccepted: z.literal(true),
   // .string().refine((value: string) => value === "true" || value === "false", {
