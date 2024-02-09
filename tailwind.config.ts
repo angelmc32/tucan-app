@@ -25,6 +25,7 @@ const config = {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...defaultTheme.fontFamily.sans],
+        museoModerno: ["var(--font-museoModerno)"],
       },
       colors: {
         border: "hsl(var(--border))",

@@ -7,7 +7,7 @@ export const globalFont = Raleway({
 
 export const georamaFont = Georama({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-georama",
 });
 
 export const interFont = Inter({

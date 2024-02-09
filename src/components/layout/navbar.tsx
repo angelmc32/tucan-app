@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useLogin, useLogout, usePrivy } from "@privy-io/react-auth";
 
 import { museoModernoFont } from "@/lib/fonts";
 
@@ -8,6 +12,23 @@ import HamburgerMenu from "./hamburgerMenu";
 import DaoDropdownMenu from "./daoDropdownButton";
 
 export default function Navbar() {
+  const router = useRouter();
+  const { authenticated } = usePrivy();
+  const { login } = useLogin({
+    onComplete: () => {
+      router.push("/cuenta");
+    },
+    onError: (error) => {
+      console.log(error);
+      // Any logic you'd like to execute after a user exits the login flow or there is an error
+    },
+  });
+  const { logout } = useLogout({
+    onSuccess: () => {
+      router.push("/");
+    },
+  });
+
   return (
     <nav className="sticky top-0 h-16 bg-background">
       <div className="mx-auto flex h-full max-w-7xl justify-between px-4">
@@ -56,16 +77,21 @@ export default function Navbar() {
             </Button>
           </Link>
           <Button
-            variant="default"
+            variant={authenticated ? "outline" : "default"}
             size="sm"
             className={`${museoModernoFont.className} text-md`}
+            onClick={authenticated ? logout : login}
           >
-            entrar
+            {authenticated ? "salir" : "entrar"}
           </Button>
         </div>
 
         <div className="flex items-center lg:hidden">
-          <HamburgerMenu />
+          <HamburgerMenu
+            authenticated={authenticated}
+            login={login}
+            logout={logout}
+          />
         </div>
       </div>
     </nav>

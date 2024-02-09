@@ -15,12 +15,24 @@ import {
 } from "@/components/ui/sheet";
 import { Button, buttonVariants } from "@/components/ui/button";
 
-// type HamburgerMenuProps = {
-//   menuItems?: [{ displayText: string; href: string }];
-// };
+type HamburgerMenuProps = {
+  authenticated: boolean;
+  login: () => void;
+  logout: () => void;
+  // menuItems?: [{ displayText: string; href: string }];
+};
 
-export default function HamburgerMenu() {
+export default function HamburgerMenu({
+  authenticated,
+  login,
+  logout,
+}: HamburgerMenuProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  function handleLogout() {
+    logout();
+    setIsMenuOpen(false);
+  }
 
   return (
     <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
@@ -89,11 +101,12 @@ export default function HamburgerMenu() {
             recursos
           </Link>
           <Button
-            variant="default"
+            variant={authenticated ? "outline" : "default"}
             size="sm"
             className={`${museoModernoFont.className} text-md`}
+            onClick={authenticated ? handleLogout : login}
           >
-            entrar
+            {authenticated ? "salir" : "entrar"}
           </Button>
         </div>
       </SheetContent>
